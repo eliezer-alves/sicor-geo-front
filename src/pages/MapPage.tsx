@@ -4,6 +4,7 @@ import type { Feature, Geometry } from "geojson";
 import { MapCanvas, type MapCanvasRef } from "@/components/map/MapCanvas";
 import { GlebasLayer } from "@/components/map/GlebasLayer";
 import { CoordsDisplay } from "@/components/map/CoordsDisplay";
+import { LayerControl, type BasemapId } from "@/components/map/LayerControl";
 import { FiltersPanel } from "@/components/filters/FiltersPanel";
 import { GlebaDetails } from "@/components/details/GlebaDetails";
 import { SummaryBar } from "@/components/summary/SummaryBar";
@@ -29,6 +30,7 @@ export function MapPage({ theme }: { theme: "light" | "dark" }) {
   const [pickMode, setPickMode] = useState(false);
   const [cursorCoords, setCursorCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<Feature<Geometry> | null>(null);
+  const [basemap, setBasemap] = useState<BasemapId>(theme === "dark" ? "dark" : "streets");
 
   // Data
   const catalog = useCatalog();
@@ -88,7 +90,7 @@ export function MapPage({ theme }: { theme: "light" | "dark" }) {
       {/* Map */}
       <MapCanvas
         ref={mapRef}
-        theme={theme}
+        basemap={basemap}
         onMapClick={handleMapClick}
         onMouseMove={handleMouseMove}
       >
@@ -122,6 +124,9 @@ export function MapPage({ theme }: { theme: "light" | "dark" }) {
           onZoomTo={handleZoomToSelected}
         />
       )}
+
+      {/* Layer Control - bottom right above zoom */}
+      <LayerControl active={basemap} onChange={setBasemap} />
 
       {/* Coordinates Display */}
       <CoordsDisplay lat={cursorCoords?.lat ?? null} lng={cursorCoords?.lng ?? null} />
