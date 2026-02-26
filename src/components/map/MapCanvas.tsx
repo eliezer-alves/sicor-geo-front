@@ -96,7 +96,7 @@ export const MapCanvas = forwardRef<MapCanvasRef, Props>(function MapCanvas(
         url={tile.url}
         attribution={tile.attribution}
         maxZoom={tile.maxZoom}
-        subdomains={tile.subdomains}
+        {...(tile.subdomains ? { subdomains: tile.subdomains } : {})}
       />
       {basemap === "hybrid" && (
         <TileLayer
