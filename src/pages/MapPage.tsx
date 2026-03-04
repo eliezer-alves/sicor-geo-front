@@ -3,6 +3,7 @@ import type { Feature, Geometry } from "geojson";
 
 import { MapCanvas, type MapCanvasRef } from "@/components/map/MapCanvas";
 import { GlebasLayer } from "@/components/map/GlebasLayer";
+import { PickedLocationMarker } from "@/components/map/PickedLocationMarker";
 import { CoordsDisplay } from "@/components/map/CoordsDisplay";
 import { LayerControl, type BasemapId } from "@/components/map/LayerControl";
 import { FiltersPanel } from "@/components/filters/FiltersPanel";
@@ -31,6 +32,7 @@ export function MapPage({ theme }: { theme: "light" | "dark" }) {
   const [cursorCoords, setCursorCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [selectedFeature, setSelectedFeature] = useState<Feature<Geometry> | null>(null);
   const [basemap, setBasemap] = useState<BasemapId>(theme === "dark" ? "dark" : "streets");
+  const [pickedCoords, setPickedCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   // Data
   const catalog = useCatalog();
@@ -42,6 +44,7 @@ export function MapPage({ theme }: { theme: "light" | "dark" }) {
     if (query) {
       setCommitted(query);
       setSelectedFeature(null);
+      setPickedCoords(null);
     }
   }, [draft]);
 
@@ -49,12 +52,14 @@ export function MapPage({ theme }: { theme: "light" | "dark" }) {
     setDraft({ ...EMPTY_DRAFT });
     setCommitted(null);
     setSelectedFeature(null);
+    setPickedCoords(null);
   }, []);
 
   const handleMapClick = useCallback(
     (lat: number, lng: number) => {
       if (pickMode) {
         setDraft((prev) => ({ ...prev, lat: lat.toFixed(6), lon: lng.toFixed(6) }));
+        setPickedCoords({ lat, lng });
         setPickMode(false);
       }
     },
@@ -101,6 +106,9 @@ export function MapPage({ theme }: { theme: "light" | "dark" }) {
           searchCenter={searchCenter}
           searchRadius={searchRadius}
         />
+        {pickedCoords && (
+          <PickedLocationMarker lat={pickedCoords.lat} lng={pickedCoords.lng} />
+        )}
       </MapCanvas>
 
       {/* Filters Panel - top left */}

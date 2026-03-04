@@ -28,6 +28,9 @@ export async function searchGlebas(
   if (filters.subprogramas && filters.subprogramas.length > 0) {
     params.subprogramas = filters.subprogramas.join(",");
   }
+  if (filters.ufs && filters.ufs.length > 0) {
+    params.ufs = filters.ufs.join(",");
+  }
   if (filters.fontesRecurso && filters.fontesRecurso.length > 0) {
     params.fontes_recurso = filters.fontesRecurso.join(",");
   }

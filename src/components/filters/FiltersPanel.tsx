@@ -152,8 +152,8 @@ export function FiltersPanel({
             <MultiSelect
               label="UF"
               options={ufOptions}
-              selected={[]}
-              onChange={() => {}}
+              selected={draft.ufs}
+              onChange={(v) => update("ufs", v)}
               placeholder="Todas as UFs"
             />
 
